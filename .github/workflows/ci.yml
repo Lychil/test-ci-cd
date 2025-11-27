@@ -1,16 +1,33 @@
-name: Simple CI
+name: react check CI
 
 on: [push, pull_request]
 
 jobs:
-  build-and-test:
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Install and test
-        run: |
-          echo "Здесь устанавливаем зависимости"
-          echo "Здесь запускаем тесты"
-          echo "Всё работает!"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "client/package-lock.json"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./client
+
+      - name: Run tests
+        run: npm test -- --watchAll=false --passWithNoTests
+        working-directory: ./client
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./client
+
+      - name: Success message
+        run: echo "React проект успешно протестирован и собран!"
