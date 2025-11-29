@@ -2,13 +2,21 @@ name: lint
 
 on: [push, pull_request]
 
-job:
+jobs:
   lint:
     needs: test-and-build
     runs-on: ubuntu-latest
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-    with:
-      node-version: 20
-      - run: npm ci
-      - run: npm run lint
+    steps:
+      - name: check
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install deps
+        run: npm ci
+
+      - name: run lint
+        run: npm run lint
