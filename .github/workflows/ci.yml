@@ -31,3 +31,20 @@ jobs:
 
       - name: Success message
         run: echo "React проект успешно протестирован и собран!"
+  lint:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: check
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install deps
+        run: npm ci
+
+      - name: run lint
+        run: npm run lint
